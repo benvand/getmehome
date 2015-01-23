@@ -1,0 +1,54 @@
+{% extends "route/route_base.html" %}
+{% block title %}{{ block.super }} - All{% endblock title %}
+{% block content %}
+    <h2>Welcome to Get Me To Work (without being squashed)</h2>
+{% for object in object_list %}
+{% comment %}
+    <h3><a href="{% url "detail_post" object.slug %}">{{ object.title|capfirst }}</a></h3>
+    <h5>by {{ object.user.email }}, {{ object.created|date:'DATETIME_FORMAT' }}</h5><br>
+{% endcomment %}
+
+    <h3>{{ object }}</h3>
+
+
+    <div class="table-responsive">
+    <table class="table">
+        <tr>
+            <th>Route</th><th>Current time</th><th style="text-align:center">Incident</th><th style="text-align:center">Traffic</th><th>Map</th><th style="text-align:center">Parser</th>
+        </tr>
+        {% for route in object.route_set.all %}
+        <tr>
+            {% if route.check_gpx %}
+                <td><a href="{% url "update_route" pk=route.id %}">{{ route }}</a></td>
+                <td>{{ route.get_time }}</td>
+                <td>{% if route.get_incident %}<span style="display:block; text-align:center; vertical-align:middle; color: darkgreen" class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span>{% else %}<span style="display:block; text-align:center; vertical-align:middle; color: darkred" class="glyphicon-align-center text-center center glyphicon glyphicon-remove-sign" aria-hidden="true"></span>{% endif %}</td>
+                <td>{% if route.get_traffic %}<span style="display:block; text-align:center; vertical-align:middle; color: darkgreen" class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span>{% else %}<span style="display:block; text-align:center; vertical-align:middle; color: darkred" class="glyphicon-align-center text-center center glyphicon glyphicon-remove-sign" aria-hidden="true"></span>{% endif %}</td>
+                <td>{{ route.get_map }}</td>
+                <td><span style="display:block; text-align:center; vertical-align:middle; color: darkgreen" class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span></td>
+                <td></td>
+            {% else %}
+                <td><a href="{% url "update_route" pk=route.id %}">{{ route }}</a></td>
+                <td></td>
+                <td><span style="display:block; text-align:center; vertical-align:middle; color: darkred" class="glyphicon-align-center text-center center glyphicon glyphicon-remove-sign" aria-hidden="true"></span></td>
+                <td><span style="display:block; text-align:center; vertical-align:middle; color: darkred" class="glyphicon-align-center text-center center glyphicon glyphicon-remove-sign" aria-hidden="true"></span></td>
+                <td></td>
+                <td><span style="display:block; text-align:center; vertical-align:middle; color: darkred" class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span></td>
+            {% endif  %}
+        </tr>
+        {% endfor %}
+    </table>
+    </div>
+
+
+
+
+{% endfor %}
+
+{% if not object_list  %}
+    <h3>There are no routes so far!</h3>
+{% endif %}
+
+{% endblock content %}
+
+
+
