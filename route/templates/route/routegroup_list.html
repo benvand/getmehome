@@ -1,7 +1,7 @@
 {% extends "route/route_base.html" %}
 {% block title %}{{ block.super }} - All{% endblock title %}
 {% block content %}
-    <h2>Welcome to Get Me To Work (without being squashed)</h2>
+    <h2>Welcome to Get Me To Work (without being run over)</h2>
 {% for object in object_list %}
 {% comment %}
     <h3><a href="{% url "detail_post" object.slug %}">{{ object.title|capfirst }}</a></h3>

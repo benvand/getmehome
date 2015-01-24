@@ -1,6 +1,7 @@
+django
 requests
-numpy
+#numpy
 django-bootstrap3
 django-extensions
 git+git://github.com/tkrajina/gpxpy.git
-git+git://github.com/thearn/pygmaps-extended.git
+#git+git://github.com/thearn/pygmaps-extended.git

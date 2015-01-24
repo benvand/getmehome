@@ -6,6 +6,7 @@ from django.conf import settings
 
 from core.common import twodp
 from api_callers.googlemaps import directions_map_url, postcode_from_lat_long
+from api_callers.googlemaps import OverQueryLimit
 
 class RouteGroup(models.Model):
     created = models.DateTimeField(auto_now_add=True,)
@@ -19,7 +20,7 @@ class RouteGroup(models.Model):
 
     def __str__(self):
         if self.embarkation and self.destination:
-            return self.embarkation + '>' + self.destination
+            return self.embarkation.capitalize() + ' > ' + self.destination.capitalize()
         return self.title
 
     class Meta:
@@ -35,7 +36,6 @@ class Route(models.Model):
     description = models.CharField(max_length=10000, null = True, blank=True)
     route_gpx_xml = models.TextField()
 
-    parser_error = False
 
     def check_gpx(self):
         try:
@@ -76,10 +76,12 @@ class Route(models.Model):
         return False
 
     def get_map(self):
-        gpx = self.get_gpx()
-        points = [[str(i[0].latitude), str(i[0].longitude)] for i in gpx.walk()]
-        return directions_map_url(points)
-
+        try:
+            gpx = self.get_gpx()
+            points = [[str(i[0].latitude), str(i[0].longitude)] for i in gpx.walk()]
+            return directions_map_url(points)
+        except OverQueryLimit as e:
+            return str(e)
 
     class Meta:
         ordering = ['-created']

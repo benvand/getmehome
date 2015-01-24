@@ -5,13 +5,13 @@ GEOCODE_API_KEY = 'AIzaSyAGF5TboOh6h5t5q0ZN5HU2ouBawx9cgEk'
 
 #TODO hacky url builders
 
+class OverQueryLimit(Exception):
+    def __str__(self):
+        return 'You have exceeded your daily request quota for the Google reverse geocode api. :/'
+
 def directions_map_url(points):
-    print len(points)
-    if not len(points) > 20:
-        points = points[::len(points)%20]
-    print len(points)
-
-
+    if len(points) > 20:
+        points = points[::len(points)/18]
     a, b = points.pop(0), points.pop(-1)
     base = '''https://www.google.com/maps/embed/v1/directions'''
     key = '?key=%s' % DIR_API_KEY
@@ -35,7 +35,9 @@ def geocode_url(lat, long):
 def address_dict_from_lat_long(lat, long):
     #TODO lol at this
     r = requests.get(geocode_url(lat, long)).json()
-    return {i['types'][0]: i['long_name'] for i in r['results'][0]['address_components']}
+    if r['status'] == 'OVER_QUERY_LIMIT':
+        raise OverQueryLimit
+    return {i['types'][0]: i['long_name'] for i in r['results'][0]['address_components'] if i.has_key('types')}
 
 def postcode_from_lat_long(lat, long):
     return address_dict_from_lat_long['postal_code']
