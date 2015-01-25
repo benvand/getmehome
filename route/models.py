@@ -7,6 +7,7 @@ from django.conf import settings
 from core.common import twodp
 from api_callers.googlemaps import directions_map_url, postcode_from_lat_long
 from api_callers.googlemaps import OverQueryLimit
+from api_callers.tfl_tims import get_tims_accidents_ll, get_tims_traffic_ll
 
 class RouteGroup(models.Model):
     created = models.DateTimeField(auto_now_add=True,)
@@ -65,23 +66,37 @@ class Route(models.Model):
         gpx = self.get_gpx()
         return gpx.length_3d()
 
+    #TODO extrapolate
+
     def get_incident(self):
-        if False:
-            return True
+        gpx = self.get_gpx()
+        points = [[str(i[0].latitude), str(i[0].longitude)] for i in gpx.walk()]
+        points=[(float(i[0]),float(i[1])) for i in points]
+        incident_coords = get_tims_accidents_ll()
+        for point in points:
+            for trouble in incident_coords:
+                if trouble[1][0]< point[1] < trouble[0][0] and \
+                        trouble[0][1]< point[0] < trouble[1][1]:
+                    return True
         return False
 
     def get_traffic(self):
-        if False:
-            return True
+        gpx = self.get_gpx()
+        points = [[str(i[0].latitude), str(i[0].longitude)] for i in gpx.walk()]
+        traffic_coords = get_tims_traffic_ll()
+        for point in points:
+            for trouble in traffic_coords :
+                if trouble[1][0]< point[1] < trouble[0][0] and \
+                        trouble[0][1]< point[0] < trouble[1][1]:
+                    return True
         return False
 
+
     def get_map(self):
-        try:
-            gpx = self.get_gpx()
-            points = [[str(i[0].latitude), str(i[0].longitude)] for i in gpx.walk()]
-            return directions_map_url(points)
-        except OverQueryLimit as e:
-            return str(e)
+        gpx = self.get_gpx()
+        points = [[str(i[0].latitude), str(i[0].longitude)] for i in gpx.walk()]
+        return directions_map_url(points)
+
 
     class Meta:
         ordering = ['-created']

@@ -23,7 +23,7 @@
                 <td>{{ route.get_time }}</td>
                 <td>{% if route.get_incident %}<span style="display:block; text-align:center; vertical-align:middle; color: darkgreen" class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span>{% else %}<span style="display:block; text-align:center; vertical-align:middle; color: darkred" class="glyphicon-align-center text-center center glyphicon glyphicon-remove-sign" aria-hidden="true"></span>{% endif %}</td>
                 <td>{% if route.get_traffic %}<span style="display:block; text-align:center; vertical-align:middle; color: darkgreen" class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span>{% else %}<span style="display:block; text-align:center; vertical-align:middle; color: darkred" class="glyphicon-align-center text-center center glyphicon glyphicon-remove-sign" aria-hidden="true"></span>{% endif %}</td>
-                <td>{{ route.get_map }}</td>
+                <td><a href="{{ route.get_map }}">Map</a></td>
                 <td><span style="display:block; text-align:center; vertical-align:middle; color: darkgreen" class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span></td>
                 <td></td>
             {% else %}
