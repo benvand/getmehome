@@ -81,21 +81,16 @@ class Route(models.Model):
 
     def points_vs_trouble(self, points, coords):
         for point in points:
-            for trouble in incident_coords:
+            for trouble in coords:
                 if trouble[1][0]< point[1] < trouble[0][0] and \
                         trouble[0][1]< point[0] < trouble[1][1]:
                     return True
         return False
 
-    #TODO extrapolate
-
     def get_incident(self):
         points=self.get_gpx_points()
         incident_coords = get_tims_accidents_ll()
         return self.points_vs_trouble(self, points, incident_coords)
-
-
-
 
     def get_traffic(self):
         points=self.get_gpx_points()
