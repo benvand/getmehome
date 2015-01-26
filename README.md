@@ -10,3 +10,6 @@ The front page will tell you which routes have traffic on them or whether there 
 This could use more work in the models.py of routes method points_vs_trouble.
 Other than that it should work.
 
+##Contributing
+
+Check the issues and go for it!
